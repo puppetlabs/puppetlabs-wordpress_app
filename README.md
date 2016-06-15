@@ -14,7 +14,7 @@
 
 ## Description
 
-The Puppet wordpress_app is a module that demonstrates example application module. The module contains application components you can use to  to set up a Wordpress database, a PHP application server, and an HAProxy load balancer. With these components, you can build two Wordpress applications: a simple LAMP stack or a stack that uses complex load-balancing.
+The Puppet wordpress_app is a module that demonstrates example application module. The module contains application components you can use to  to set up a WordPress database, a PHP application server, and an HAProxy load balancer. With these components, you can build two WordPress applications: a simple LAMP stack or a stack that uses complex load-balancing.
 
 ## Setup
 
@@ -26,7 +26,7 @@ The [Puppet orchestrator documentation](./orchestrator_intro.html) provides comm
 
 ### Getting started with wordpress_app
 
-The simplest use of the wordpress_app module is to install Wordpress on a single node. For example, you can add the application declaration to your `site.pp`:
+The most basic use of the wordpress_app module is to install Wordpress on a single node. For example, you can add the application declaration to your `site.pp`:
 
 ```puppet
   wordpress_app::simple { 'all_in_one':
@@ -45,18 +45,15 @@ After deploying this application, you can access it at `http://kermit-1.example.
 
 ### `wordpress_app::simple`
 
-This is a simple wordpress application model. The three components are defined staticly in the application definition with their name expected to match the applications. The ddatbase component produces a database resource, the web component consumes that resource and produces and Http resource which in turn is consumed by the Lb. component.
+This is a simple Wordpress application model. The three components are defined statically in the application definition with their names expected to match the name of the application. The database component produces a database resource. The web component consumes that database resource, and produces an HTTP resource. The load balancer component consumes this HTTP resource.
 
-This style of declaration works well if every instance of the application has the same components. It makes it easier to assign components to a single node or spread them across multiple nodes in different instances.
+You should use this style of declaration if every instance of the application has the same components. Such declarations make it easier to assign components to a single node or to spread them across multiple nodes in different instances.
 
 ### `wordpress_app`
 
-This is a more complex application definition. It uses functions to dynamically
-discover what components have been declared, validate them and wire them
-together. This type of definition works well when there may be a varying number
-of components or some components are optional. By discovering the compontent
-names dynamically the user doesn't have to worry about matching staticly
-declared component names.
+This is a more complex application definition. It uses functions to dynamically discover what components have been declared, and then it validates and connects them. You should use this type of definition if you have a varying number of components, or if some components are optional. By discovering the component names dynamically, you don't have to worry about matching statically declared component names. 
+
+In the following example, the `collect_component_titles` function searches through the applications nodes and finds all resources matching a certain component type and returns a list of their titles. In the previous example case, the function verifies that there is one database, and it then declares that resource. Since the name of the exported database capability resource is set for internal consumption, you shouldn't have to track the name.
 
 ```puppet
   $db_components = collect_component_titles($nodes, Wordpress_app::Database)
@@ -71,12 +68,9 @@ declared component names.
     export     => Database["wdp-${name}"]
   }
 ```
+For the web components, the function collects all resources assigned to nodes in the application. The map function loops over the resources and declares the components, and it then collects the HTTP resources they export for later consumption. This allows you to declare one or more web components to scale their application dynamically through the declaration.
 
-The `collect_component_titles` function searches through the applications nodes
-and finds all resources matching a certain component type and returns a list of
-their titles. In this case we verify that there is one and only one database
-and then declare that resource. The name of the exported Database capability
-resource is set for internal consumption the user shouldn't have to know it.
+For example:
 
 ```puppet
   $web_components = collect_component_titles($nodes, Wordpress_app::Web)
@@ -101,11 +95,9 @@ resource is set for internal consumption the user shouldn't have to know it.
   }
 ```
 
-For the web components we collect all resources assigned to nodes in the
-application. We then use the map function to loop over them declaring the
-components and collecting the Http resources they export for later consumption.
-This allows the user to declare one or more web components to scale their
-application dynamically through the declaration.
+The load balancer component of the application is optional and you may have any number of instances of it. In some cases you may have no need for a load balancer, or you may require several in a high availability configurations. Each load balancer requires the `web-https` resources exported by the web components to ensure ordering. The `web-https` resources are also passed in via the `balancermembers` parameter. This allows the load balancer to collect an number of HTTP resources.
+
+For example:
 
 ```puppet
   $lb_components = collect_component_titles($nodes, Wordpress_app::Lb)
@@ -122,18 +114,8 @@ application dynamically through the declaration.
   }
 ```
 
-The load balancer component for the application is optional and their may be
-any number of instances of it. This allows users to not use a load balancer in
-instances of the application where one isn't necessary or use multiple load
-balancers if required for availability. Each load balancer requires the
-web-http resources exported by the webs to ensure ordering and also passes
-those resources in via the `balancermembers` parameter. This allows the load
-balancer to collect an number of Http resources.
 
-
-The following declares an instance of the wordpress application with two web
-nodes and a single load balancer. Note that the resource titles used here are
-arbitrary but much be unique in this environment.
+The following example, shows a declaration of an instance of the WordPress application with two web nodes and a single load balancer. The resource titles used here are arbitrary, but they must be unique in this environment.
 
 ```puppet
   wordpress_app { 'tiered':
@@ -149,19 +131,8 @@ arbitrary but much be unique in this environment.
 
 ### Components vs Profiles
 
-If you are already organizing your code into roles and profiles the application
-components are probably very similiar to your profiles. If all your nodes serve
-a single purpose you may be able to just convert your profile classes into
-component defined types. If you need to put multiple components on a single
-node that share resources this may resut in conflicts.  For example if you have
-one database node that provide datbases for multiple wordpress application
-instances mysql puppet resources may be shared or if you had multiple http
-components in your stack apache resources might be shared. In this case the
-shared resources should be factored out of the components into profile classes
-which can then be included in the component. An example of this is
-`wordpress_app:database` and `workpress_app::database_profile`. The underlying
-mysql server and firewall rules are configured in the profile while the
-specific datbase, user, and permissions are managed in the component.
+If you are already organizing your code into roles and profiles, the application components are probably very similiar to your profiles. If
+all your nodes serve a single purpose, you may be able to just convert your profile classes into component defined types. However, if you need to put multiple components on a single node that share resources, this may resut in conflicts. For example if you have one database node that provides databases for multiple WordPress application instances,  MySQL Puppet resources may be shared. Or, if you have multiple HTTP components in your stack, Apache resources might be shared. If this is the case, you should turn the components into profile classes that can then be included in the component. Consider `wordpress_app:database` and `workpress_app::database_profile`: the underlying MySQL server and firewall rules are configured in the profile while the specific datbase, user, and permissions are managed in the component.
 
 ## Reference
 
@@ -169,7 +140,7 @@ specific datbase, user, and permissions are managed in the component.
 
 #### `wordpress_app::simple`
 
-This is a simple wordpress application.
+This is a simple WordPress application.
 
 ##### Components
 
@@ -190,7 +161,7 @@ This is a simple wordpress application.
 
 #### `wordpress_app`
 
-This is a more complex wordpress application with the following components. Use of the collect component titles function means that the names of the components don't matter as long as they are unique per component through the environment.
+This is a more complex WordPress application with the following components. Use of the collect component titles function means that the names of the components don't matter as long as they are unique per component through the environment.
 
 ##### Components
 
@@ -225,19 +196,19 @@ This is a more complex wordpress application with the following components. Use 
 
 ##### Parameters
 
-* `database` - the database name for this wordpress application (default: 'wordpress')
-* `user` - the user wordpress should connect to the database as (default: 'wordpress')
-* `password` - the password wordpress should connect to the database as (default: 'wordpress')
+* `database` - the database name for this WordPress application (default: 'wordpress')
+* `user` - the user WordPress should connect to the database as (default: 'wordpress')
+* `password` - the password WordPress should connect to the database as (default: 'wordpress')
 
 
 #### `wordpress_app::web`
 
-Manages wordpress and apache
+Manages WordPress and apache
 
 ##### Capabilities
 
 - Consumes Database for mysql database
-- Produces Http for wordpress
+- Produces Http for WordPress
 
 ##### Parameters
 
@@ -246,7 +217,7 @@ Manages wordpress and apache
 * `db_name` - the database name
 * `db_user` - the database user
 * `db_password` - the database password
-* `apache_port` - The apache port wordpress should listen on
+* `apache_port` - The apache port WordPress should listen on
 * `interface` - The interface apache should listen on
 
 #### `wordpress::lb`
@@ -255,12 +226,12 @@ Application component to manage haproxy load balancing.
 
 ##### Capabilities
 
-- Consumes `Array [Http]` for wordpress nodes
+- Consumes `Array [Http]` for WordPress nodes
 - Produces `Http` of haproxy
 
 ##### Parameters
 
-* `balancermembers` - Array of `Http` resources of wordpress nodes to loadbalance
+* `balancermembers` - Array of `Http` resources of WordPress nodes to loadbalance
 * `lb_options` - Array of options to pass to haproxy (default: ['forwardfor', 'http-server-close', 'httplog'])
 * `balance_mode` - load balancing mode to use (default: 'roundrobin')
 * `ipaddress` - ipaddress for haproxy to listen on (default: '0.0.0.0)
