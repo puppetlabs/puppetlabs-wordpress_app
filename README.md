@@ -14,21 +14,19 @@
 
 ## Description
 
-Wordpress_app an example application modeling module. It has
-application components for setting up a wordpress database, php app server and
-HAproxy load balancer. These are used to build two wordpress applications a
-simple LAMP stack and more complex load balanced version.
-
+The Puppet wordpress_app is a module that demonstrates example application module. The module contains application components you can use to  to set up a Wordpress database, a PHP application server, and an HAProxy load balancer. With these components, you can build two Wordpress applications: a simple LAMP stack or a stack that uses complex load-balancing.
 
 ## Setup
 
 ### Setup Requirements
 
-In order to use this module you will need the `app_management` setting on on your puppet master and plugin sync enable on the agents.
+To use this module, you must enable application management on the Puppet master. If you've already installed PE, you can [enable this setting via the console](./orchestrator_install.html#enable-the-application-orchestration-service-and-orchestrator-client) or by adding  `app_management = true` to the `puppet.conf` file on your Puppet master. You also need to enable plug in sync on any agents you want to use to host application components.
 
-### Beginning with wordpress_app
+The [Puppet orchestrator documentation](./orchestrator_intro.html) provides commands and API endpoints you can use to deploy the wordpress_app. 
 
-The simplest use of wordpress app is to install wordpress on a single node. To do add an application declaration to your site.pp like:
+### Getting started with wordpress_app
+
+The simplest use of the wordpress_app module is to install Wordpress on a single node. For example, you can add the application declaration to your `site.pp`:
 
 ```puppet
   wordpress_app::simple { 'all_in_one':
@@ -41,22 +39,15 @@ The simplest use of wordpress app is to install wordpress on a single node. To d
   }
 ```
 
-After deploying this application you should be able to access wordpress at
-`http://kermit-1.example.com`.
+After deploying this application, you can access it at `http://kermit-1.example.com`.
 
 ## Patterns
 
 ### `wordpress_app::simple`
 
-This is a simple wordpress application model. The three components are defined
-staticly in the application definition with their name expected to match the
-applications. The ddatbase component produces a database resource, the web
-component consumes that resource and produces and Http resource which in turn
-is consumed by the Lb. component.
+This is a simple wordpress application model. The three components are defined staticly in the application definition with their name expected to match the applications. The ddatbase component produces a database resource, the web component consumes that resource and produces and Http resource which in turn is consumed by the Lb. component.
 
-This style of declaration works well if every instance of the application has
-the same components. It makes it easier to assign components to a single node
-or spread them across multiple nodes in different instances.
+This style of declaration works well if every instance of the application has the same components. It makes it easier to assign components to a single node or spread them across multiple nodes in different instances.
 
 ### `wordpress_app`
 
