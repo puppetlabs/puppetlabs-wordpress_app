@@ -1,0 +1,15 @@
+{
+  "name": "puppetlabs-wordpress_app",
+  "version": "0.1.0",
+  "author": "puppetlabs",
+  "summary": "Application module for managing wordpress.",
+  "license": "Apache-2.0",
+  "source": "https://github.com/puppetlabs/puppetlabs-wordpress_app",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-wordpress_app",
+  "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "data_provider": null
+}
+
