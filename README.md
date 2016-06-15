@@ -146,121 +146,123 @@ This is a simple WordPress application.
 
 * `Wordpress_app::Database[$name]`
 * `Wordpress_app::Web[$name]`
-   - consumes from Database
+   - consumes from `Database`
 * `Wordpress_app::Lb[$name]`
-   - consumes from Web
+   - consumes from `Web`
 
 ##### Parameters
 
-* `database` - The database name to use (default 'wordpress')
-* `db_user` - The database user for the application (default: 'wordpress')
-* `db_pass` - The password for the database (default: wordpress)
-* `web_port` - the port the webserver should listen on (default: '8080')
-* `lb_port` - the port ha proxy should listen on when load balancing (default: '80')
+* `database`: The database name to use (default `'wordpress'`).
+* `db_user`: The database user for the application (default: `'wordpress'`).
+* `db_pass`: The password for the database (default: `wordpress`).
+* `web_port`: The port the webserver will listen on (default: `'8080'`).
+* `lb_port` - The port HAProxy will listen on when load balancing (default: `'80'`).
 
 
 #### `wordpress_app`
 
-This is a more complex WordPress application with the following components. Use of the collect component titles function means that the names of the components don't matter as long as they are unique per component through the environment.
+This is a more complex WordPress application with the following components. Using the `collect_component_titles` function means that the names of the components don't matter as long as they are unique per component through the environment.
 
 ##### Components
 
 * `Wordpress_app::Database[.*]`
-   - There must be one of these
+   - There must be at least one of these
 * `Wordpress_app::Web[.*]`
-   - There must be one or more of these.
-   - consumes from Database
+   - There must be one or more of these
+   - consumes from `Database`
 * `Wordpress_app::Lb[.*]`
-   - There may be any number of LB components
-   - each consumes all Web components
+   - There may be any number of `Lb` components
+   - each consumes all `Web` components
 
 ###### Parameters
 
-* `database` - The database name to use (default 'wordpress')
-* `db_user` - The database user for the application (default: 'wordpress')
-* `db_pass` - The password for the database (default: wordpress)
-* `web_int` - the interface the webserver should listen on.
-* `web_port`: the port the webserver should listen on (default: '80')
-* `lb_ipaddress` - The ip the load balancer will listen on(default: '0.0.0.0')
-* `lb_port` - The port the load balancer will listen on (default: '8080')
-* `lb_balance_mode` - The loadbalancer mode to use (default: 'roundrobin')
-* `lb_options` - the haproxy options to pass (default: ['forwardfor','http-server-close','httplog'] )
+* `database`: The database name to use (default `'wordpress'`).
+* `db_user`: The database user for the application (default: `'wordpress'`).
+* `db_pass`: The password for the database (default: `wordpress`).
+* `web_int`: The interface the webserver will listen on.
+* `web_port`: The port the webserver will listen on (default: `'80'`).
+* `lb_ipaddress`: The IP address the load balancer will listen on (default: `'0.0.0.0'`).
+* `lb_port`: The port the load balancer will listen on (default: `'8080'`).
+* `lb_balance_mode`: The loadbalancer mode to use (default: `'roundrobin'`).
+* `lb_options`: The HAProxy options to pass (default: `['forwardfor','http-server-close','httplog']` ).
 
 ### Component Types
 
 #### `word_press_app::database`
 
+The application component to manage the WordPress database.
+
 ##### Capabilities
 
-- Produces a `Database` capabality resource for the mysql database
+- Produces a `Database` capabality resource for the MySQL database
 
 ##### Parameters
 
-* `database` - the database name for this WordPress application (default: 'wordpress')
-* `user` - the user WordPress should connect to the database as (default: 'wordpress')
-* `password` - the password WordPress should connect to the database as (default: 'wordpress')
+* `database`: The database name for this application (default: `'wordpress'`).
+* `user`: The application user that will connect to the database (default: `'wordpress'`).
+* `password` - the password the application will use to connect to the database (default: `'wordpress'`).
 
 
 #### `wordpress_app::web`
 
-Manages WordPress and apache
+The application component to manage WordPress and Apache.
 
 ##### Capabilities
 
-- Consumes Database for mysql database
-- Produces Http for WordPress
+- Consumes `Database` for the MySQL database
+- Produces `Http` for WordPress
 
 ##### Parameters
 
-* `db_host` - the database host
-* `db_port` - the database port
-* `db_name` - the database name
-* `db_user` - the database user
-* `db_password` - the database password
-* `apache_port` - The apache port WordPress should listen on
-* `interface` - The interface apache should listen on
+* `db_host`: The database host.
+* `db_port`: The database port.
+* `db_name`: The database name.
+* `db_user`: The database user.
+* `db_password`: The database password.
+* `apache_port`: The Apache port WordPress will listen on.
+* `interface`: The interface Apache will listen on.
 
 #### `wordpress::lb`
 
-Application component to manage haproxy load balancing.
+The application component to manage HAProxy load balancing.
 
 ##### Capabilities
 
 - Consumes `Array [Http]` for WordPress nodes
-- Produces `Http` of haproxy
+- Produces `Http` of HAProxy
 
 ##### Parameters
 
-* `balancermembers` - Array of `Http` resources of WordPress nodes to loadbalance
-* `lb_options` - Array of options to pass to haproxy (default: ['forwardfor', 'http-server-close', 'httplog'])
-* `balance_mode` - load balancing mode to use (default: 'roundrobin')
-* `ipaddress` - ipaddress for haproxy to listen on (default: '0.0.0.0)
-* `port` - port for haproxy to listen on (default: '80')
+* `balancermembers`: An array of `Http` resources of WordPress nodes to load balance.
+* `lb_options`: An array of options to pass to HaProxy (default: `['forwardfor', 'http-server-close', 'httplog']`).
+* `balance_mode`: The load balancing mode to use (default: `'roundrobin'`).
+* `ipaddress`: The IP address for HAProxy to listen on (default: `'0.0.0.0`).
+* `port`: The port for HAProxy to listen on (default: `'80'`).
 
 ### Classes
 
 #### `wordpress_app::ruby`
 
-Manages ruby package for puppetlabs-concat. Set manage to false if you are managing the ruby package elsewhere.
+The class that manage the ruby package for puppetlabs-concat. 
 
 ##### Parameters
 
-* `manage` - Should this manage the ruby package (default: true)
+* `manage` - Whether to manage the ruby package (default: `true`). Set to `false` if you are managing the ruby package elsewhere.
 
 #### `wordpress_app::database_profile`
 
-Manages the mysql server and firewall rules
+The class that manages the MySQL server and firewall rules.
 
 ##### Parameters
 
-* `bind_address` - the address mysql should listen on (default: '0.0.0.0')
+* `bind_address`: The address MySQL will listen on (default: `'0.0.0.0'`).
 
 #### `wordpress_app::web_profile`
 
-Manages apache, selinux, mysql client libraries and wget for wordpress.
+The class that manages Apache, SELinux, the MySQL client libraries, and wget for WordPress.
 
 ##### Parameters
 
-* `manage_selinux` - Should this manage selinux and disable it (default: true)
+* `manage_selinux` - Whether to manage SELinux and disable it (default: `true`).
 
-none
+
