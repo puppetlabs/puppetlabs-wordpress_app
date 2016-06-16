@@ -241,7 +241,7 @@ The application component to manage HAProxy load balancing.
 
 #### `wordpress_app::ruby`
 
-The class that manage the ruby package for puppetlabs-concat. 
+The class that manages the ruby package for puppetlabs-concat. 
 
 ##### Parameters
 
