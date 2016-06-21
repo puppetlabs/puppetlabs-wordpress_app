@@ -24,6 +24,8 @@ If you use Puppet Enterprise, the [Puppet orchestrator documentation](https://do
 
 In addition, see the [application orchestration workflow](https://docs.puppet.com/pe/latest/app_orchestration_workflow.html) docs for more conceptual information.
 
+If you use, this module includes a `Puppetfile` that you can use to install it and it's dependencies.
+
 ## Getting started with wordpress_app
 
 The most basic use of the wordpress_app module is to install Wordpress on a single node. For example, you can add the following application declaration to your `site.pp`:
@@ -164,12 +166,12 @@ This is a more complex WordPress application. Using the `collect_component_title
 ##### Components
 
 * `Wordpress_app::Database[.*]`
-   - There must be at least one of these
+   - You must have only one of these
 * `Wordpress_app::Web[.*]`
-   - There must be one or more of these
+   - You can have one or more of these
    - consumes from `Database`
 * `Wordpress_app::Lb[.*]`
-   - There may be any number of `Lb` components
+   - You can have any number of `Lb` components
    - each consumes all `Web` components
 
 ##### Parameters
