@@ -24,7 +24,7 @@ If you use Puppet Enterprise, the [Puppet orchestrator documentation](https://do
 
 In addition, see the [application orchestration workflow](https://docs.puppet.com/pe/latest/app_orchestration_workflow.html) docs for more conceptual information.
 
-If you use, this module includes a `Puppetfile` that you can use to install it and it's dependencies.
+If you use r10k, this module includes a `Puppetfile` that you can use to install it and its dependencies.
 
 ## Getting started with wordpress_app
 
