@@ -44,7 +44,7 @@ define wordpress_app::web(
 }
 Wordpress_app::Web consumes Database{
   db_host     => $host,
-  db_name     => $database,
+  db_name     => $name,
   db_user     => $user,
   db_password => $password,
 }
