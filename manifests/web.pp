@@ -23,7 +23,7 @@ define wordpress_app::web(
 
   class {'wordpress':
     db_host        => $db_host,
-    db_name        => $database,
+    db_name        => $db_name,
     db_user        => $db_user,
     db_password    => $db_password,
     create_db      => false,
