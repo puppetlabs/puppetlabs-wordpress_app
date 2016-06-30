@@ -20,7 +20,7 @@ The Puppet wordpress_app is a module that demonstrates an example application mo
 
 To use this module, you must enable application management on the Puppet master. Add `app_management = true` to the `puppet.conf` file on your Puppet master. You also need to enable plugin sync on any agents that will host application components.
 
-If you use Puppet Enterprise, the [Puppet orchestrator documentation](https://docs.puppet.com/pe/latest/orchestrator_intro.html) provides commands and API endpoints you can use to deploy the wordpress_app. 
+If you use Puppet Enterprise, the [Puppet orchestrator documentation](https://docs.puppet.com/pe/latest/orchestrator_intro.html) provides commands and API endpoints you can use to deploy the wordpress_app.
 
 In addition, see the [application orchestration workflow](https://docs.puppet.com/pe/latest/app_orchestration_workflow.html) docs for more conceptual information.
 
@@ -43,6 +43,11 @@ The most basic use of the wordpress_app module is to install Wordpress on a sing
 
 After deploying this application, you can access it at `http://node1.example.com`.
 
+### SELinux
+
+SELinux may prevent Apache from connecting to MySQL. Make sure it's properly
+configured or disabled if you run into database connection errors.
+
 ## Patterns
 
 ### `wordpress_app::simple`
@@ -53,7 +58,7 @@ You should use this style of declaration if every instance of the application ha
 
 ### `wordpress_app`
 
-This is a more complex application definition. It uses functions to dynamically discover what components have been declared, and then it validates and connects them. You should use this type of definition if you have a varying number of components, or if some components are optional. By discovering the component names dynamically, you don't have to worry about matching statically declared component names. 
+This is a more complex application definition. It uses functions to dynamically discover what components have been declared, and then it validates and connects them. You should use this type of definition if you have a varying number of components, or if some components are optional. By discovering the component names dynamically, you don't have to worry about matching statically declared component names.
 
 In the following example, the `collect_component_titles` function searches through the application's nodes and finds all resources matching a certain component type and returns a list of their titles. The function verifies that there is one database, and it then declares that resource. Since the name of the exported database capability resource is set for internal consumption, you shouldn't have to track the name.
 
@@ -243,7 +248,7 @@ The application component to manage HAProxy load balancing.
 
 #### `wordpress_app::ruby`
 
-The class that manages the ruby package for puppetlabs-concat. 
+The class that manages the ruby package for puppetlabs-concat.
 
 ##### Parameters
 
@@ -259,10 +264,8 @@ The class that manages the MySQL server and firewall rules.
 
 #### `wordpress_app::web_profile`
 
-The class that manages Apache, SELinux, the MySQL client libraries, and wget for WordPress.
+The class that manages Apache, the MySQL client libraries, and wget for WordPress.
 
 ##### Parameters
 
-* `manage_selinux`: Whether to manage SELinux and disable it (default: `true`).
-
-
+none

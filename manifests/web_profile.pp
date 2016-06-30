@@ -1,6 +1,4 @@
-class wordpress_app::web_profile(
-  $manage_selinux = true,
-){
+class wordpress_app::web_profile {
   class {'apache':
     default_vhost => false,
   }
@@ -12,12 +10,5 @@ class wordpress_app::web_profile(
 
   package {'wget':
     ensure => 'present'
-  }
-  if $manage_selinux {
-    # selinux needs to be configured for wordpress and for this example,
-    # jfryman/selinux is used to disable it on the web component nodes
-    class { selinux:
-      mode => 'disabled',
-    }
   }
 }
