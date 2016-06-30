@@ -13,7 +13,6 @@ application wordpress_app::simple(
   }
   wordpress_app::web { $name:
     apache_port => $web_port,
-    interface   => $web_int,
     export      => Http["web-${name}"],
     consume     => Database["db-${name}"],
   }
