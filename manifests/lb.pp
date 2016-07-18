@@ -13,9 +13,9 @@ define wordpress_app::lb (
     ipaddress        => $ipaddress,
     mode             => 'http',
     options          => {
-      'cookie'       => 'SERVERID insert indirect',
-      'option'       => $lb_options,
-      'balance'      => $balance_mode,
+      'cookie'  => 'SERVERID insert indirect',
+      'option'  => $lb_options,
+      'balance' => $balance_mode,
     },
     ports            => $port,
   }

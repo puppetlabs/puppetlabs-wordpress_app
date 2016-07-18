@@ -13,12 +13,16 @@ define wordpress_app::web(
   include mysql::bindings
   include mysql::bindings::php
 
+  $int =  $interface ? {
+    /\S+/   => $::networking['interfaces'][$interface]['ip'],
+    default => $::ipaddress },
+
   apache::vhost { $::fqdn:
     priority   => '10',
     vhost_name => $::fqdn,
     port       => $apache_port,
     docroot    => '/var/www/html',
-    ip         => $interface ? { /\S+/ => $::networking['interfaces'][$interface]['ip'], default => $::ipaddress },
+    ip         => $int,
   } ->
 
   class {'wordpress':
