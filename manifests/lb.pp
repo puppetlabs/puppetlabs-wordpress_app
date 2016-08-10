@@ -41,4 +41,5 @@ Wordpress_app::Lb produces Http {
   host => $::hostname,
   ip   => $::ipaddress,
   port => $port,
+  status_codes => [200, 302],
 }

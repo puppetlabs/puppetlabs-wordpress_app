@@ -15,7 +15,7 @@ define wordpress_app::web(
 
   $int =  $interface ? {
     /\S+/   => $::networking['interfaces'][$interface]['ip'],
-    default => $::ipaddress },
+    default => $::ipaddress }
 
   apache::vhost { $::fqdn:
     priority   => '10',
@@ -56,4 +56,5 @@ Wordpress_app::Web produces Http {
   ip   => $interface ? { /\S+/ => $::networking['interfaces'][$interface]['ip'], default => $::ipaddress },
   port => $apache_port,
   host => $::hostname,
+  status_codes => [200, 302],
 }
