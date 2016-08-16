@@ -1,17 +1,18 @@
 require 'spec_helper'
 
 describe 'wordpress_app::database', :type => :define do
-  let :title do
-    'test'
+  let :facts do
+    {
+      :operatingsystem => 'CentOS',
+      :operatingsystemmajrelease => '7',
+      :osfamily => 'Redhat',
+    }
   end
 
-  let(:facts) {{
-    :operatingsystem => 'CentOS',
-    :operatingsystemmajrelease => '7',
-    :osfamily => 'Redhat',
-  }}
+  let(:title) { 'public_blog' }
 
-  describe 'should work with only default parameters' do
-    it { is_expected.to contain_wordpress_app__database('test') }
+  context 'with defaults for all parameters' do
+    it { should compile }
+    it { should contain_wordpress_app__database('public_blog') }
   end
 end
