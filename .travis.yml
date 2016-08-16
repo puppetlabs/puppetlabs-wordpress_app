@@ -1,0 +1,11 @@
+language: ruby
+bundler_args: --without development
+script: "bundle exec rake lint spec SPEC_OPTS='--format documentation'"
+rvm:
+  - 2.1.10
+  - 2.2.5
+  - 2.3.1
+env:
+  - PUPPET_GEM_VERSION="~> 4.0"
+notifications:
+  email: false
