@@ -31,6 +31,7 @@ If you use r10k, this module includes a `Puppetfile` that will install the modul
 The most basic use of the wordpress_app module is to install Wordpress on a single node. For example, you can add the following application declaration to your `site.pp`:
 
 ```puppet
+  # Example code to be added to the site.pp
   wordpress_app::simple { 'all_in_one':
     nodes => {
       Node['node1.example.com'] => [
@@ -63,6 +64,7 @@ This is a more complex application definition. It uses functions to dynamically 
 In the following example, the `collect_component_titles` function searches through the application's nodes and finds all resources matching a certain component type and returns a list of their titles. The function verifies that there is one database, and it then declares that resource. Since the name of the exported database capability resource is set for internal consumption, you shouldn't have to track the name.
 
 ```puppet
+  # Example code in wordpress_app/manifests/init.pp
   $db_components = collect_component_titles($nodes, Wordpress_app::Database)
   if (size($db_components) != 1){
     $db_size = size($db_components)
@@ -80,6 +82,7 @@ For the web components, the function collects all resources assigned to nodes in
 For example:
 
 ```puppet
+  # Example code in wordpress_app/manifests/init.pp
   $web_components = collect_component_titles($nodes, Wordpress_app::Web)
   # Verify there is at least one Web.
   if (size($web_components) == 0) {
@@ -107,6 +110,7 @@ The load balancer component of the application is optional, and you may have any
 For example:
 
 ```puppet
+  # Example code in wordpress_app/manifests/init.pp
   $lb_components = collect_component_titles($nodes, Wordpress_app::Lb)
   $lb_components.each |$comp_name| {
     wordpress_app::lb { $comp_name:
@@ -124,6 +128,7 @@ For example:
 The following example shows a declaration of an instance of the Wordpress application with two web nodes and a single load balancer. The resource titles used here are arbitrary, but they must be unique in this environment.
 
 ```puppet
+  # Example code to be added to the site.pp
   wordpress_app { 'tiered':
     nodes => {
       # The titles of these don't matter as long as they're unique per component.
