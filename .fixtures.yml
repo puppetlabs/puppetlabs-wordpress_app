@@ -1,0 +1,12 @@
+fixtures:
+  repositories:
+    app_modeling: "https://github.com/puppetlabs/puppetlabs-app_modeling.git"
+    mysql: "https://github.com/puppetlabs/puppetlabs-mysql.git"
+    firewall: "https://github.com/puppetlabs/puppetlabs-firewall.git"
+    stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib.git"
+    apache: "https://github.com/puppetlabs/puppetlabs-apache.git"
+    haproxy: "https://github.com/puppetlabs/puppetlabs-haproxy.git"
+    concat: "https://github.com/puppetlabs/puppetlabs-concat.git"
+    wordpress: "https://github.com/hunner/puppet-wordpress.git"
+  symlinks:
+    wordpress_app: "#{source_dir}"
