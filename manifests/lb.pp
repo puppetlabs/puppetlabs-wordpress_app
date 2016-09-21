@@ -38,7 +38,7 @@ define wordpress_app::lb (
   }
 }
 Wordpress_app::Lb produces Http {
-  host => $::hostname,
+  host => $::fqdn,
   ip   => $::ipaddress,
   port => $port,
   status_codes => [200, 302],

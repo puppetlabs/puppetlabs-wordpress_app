@@ -8,10 +8,6 @@ define wordpress_app::web(
   String $interface = '',
 ) {
   include wordpress_app::web_profile
-  include apache::mod::php
-  include mysql::client
-  include mysql::bindings
-  include mysql::bindings::php
 
   $int =  $interface ? {
     /\S+/   => $::networking['interfaces'][$interface]['ip'],
@@ -55,6 +51,6 @@ Wordpress_app::Web consumes Database{
 Wordpress_app::Web produces Http {
   ip   => $interface ? { /\S+/ => $::networking['interfaces'][$interface]['ip'], default => $::ipaddress },
   port => $apache_port,
-  host => $::hostname,
+  host => $::fqdn,
   status_codes => [200, 302],
 }
