@@ -1,7 +1,7 @@
 class wordpress_app::web_profile {
   class {'apache':
     default_vhost => false,
-    mpm_module => 'prefork',
+    mpm_module    => 'prefork',
   }
 
   include apache::mod::prefork
