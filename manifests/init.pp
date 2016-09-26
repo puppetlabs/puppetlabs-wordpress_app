@@ -53,7 +53,7 @@ application wordpress_app (
       port            => $lb_port,
       balance_mode    => $lb_balance_mode,
       require         => $web_https,
-      export          => Http["lb-${name}"],
+      export          => Http["lb-${comp_name}"],
     }
   }
 }
