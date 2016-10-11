@@ -52,7 +52,7 @@
     }
   ],
   "dependencies": [
-    {"name":"puppetlabs-app_modeling","version_requirement":">=0.1.0 <0.2.0"},
+    {"name":"puppetlabs-app_modeling","version_requirement":">=0.2.0 <0.3.0"},
     {"name":"puppetlabs-firewall","version_requirement":">=1.0.1 <2.0.0"},
     {"name":"puppetlabs-mysql","version_requirement":">=3.0.0 <4.0.0"},
     {"name":"puppetlabs-apache","version_requirement":">=1.0.0 <2.0.0"},
